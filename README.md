@@ -18,3 +18,32 @@ Other wise client had to make 2 requests. In first request we would send the fil
 
 So in getInitialProps, after next.9.3 it is recommended to use 'getStaticProps or getServerSideProps', our componnet will do the async operations and result will returned as an object. Our components will have access this properties as their props property. 
 
+### Add Dynamic Links
+
+in portfolios page
+      
+      renderPosts(posts) {
+          return posts.map((post) => {
+            return (
+              <li key={post.id}>
+                <Link href={`/portfolio?title=${post.title}`}>//i added query parameter
+                  <a> {post.title}</a>
+                </Link>
+              </li>
+            );
+          });
+        }
+        
+ when that link is clicked, it will take the user to /portfolio/titleOFThePost 
+ In order to access this query parameter, we use `useRouter` in functional componens and `withRouter` in class based components. 
+ 
+          const Portfolio = () => {
+           const router = useRouter();
+
+           return (
+             <BaseLayout>
+               <h1>portfolio</h1>
+               <p>{router.query.title}</p>
+             </BaseLayout>
+           );
+         };
