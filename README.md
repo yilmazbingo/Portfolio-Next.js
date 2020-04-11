@@ -12,7 +12,7 @@ create next.config.js in the root of the app and place this:
         module.exports=withSass()
 
 ### Get Initial Props
-- In server-side-rendering, server sends a populated page to the client upon request. But before sends the html, it has to make sure that, if there is any async operation to be completed and then it has to send the html. Next.js uses "react-loadable" package to detect if there is any async operation has to be done before sending the component. If there is, server will wait till that opetation is completed and then it will render the component.
+- In server-side-rendering, server sends a populated page to the client upon request. But before sends the html, it has to make sure that, all the async operations are completed and then it will send the html. Next.js uses "react-loadable" package to detect if there is any async operation has to be done before sending the component. If there is, server will wait till that opetation is completed and then it will render the component.
 
 Other wise client had to make 2 requests. In first request we would send the file with ready information, and inside the component's getDerivedStateFromProps lifecycle method we would start the async operation, most likely fetching data, so our client had to make another request to the server. We have to render our app twice. Rendering our react app on the server is extremely computationally intensive. Also we had to write extra alot of code. 
 
@@ -100,9 +100,9 @@ next.js suppors nested routing. if you have this directory /pages/portfolio/al/a
  
     import { Link as DynamicLink } from "../../routes";
 
-    <DynamicLink route="blog" params={{ id: "2" }}>
-             <a>Hello world</a>
-           </DynamicLink>
+       <DynamicLink route="blog" params={{ id: "2" }}>
+                <a>Hello world</a>
+              </DynamicLink>
 
 
 
