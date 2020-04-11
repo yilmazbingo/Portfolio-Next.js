@@ -47,3 +47,62 @@ in portfolios page
              </BaseLayout>
            );
          };
+
+in this structure we will get a long url. We can fix this by addding `as` prop to <Link/>
+
+           <Link
+            as={`/portfolio/${post.id}`}
+            href={`/portfolio?title=${post.title}`}
+            >
+            <a> {post.title}</a>
+          </Link>
+
+this is going to be our firs url:
+
+         http://localhost:3000/portfolio/1
+         
+If we refresh the page we will get 404 page not found error because server does not know about this url. Routing is handled by next.js but if we want to add custom endpoint we should define a server inside next.js in dev environment. /server.js file includes the express server set up. In order to use dynamic routes:
+
+next.js suppors nested routing. if you have this directory /pages/portfolio/al/abc will be serving for this request:
+
+         http://localhost:3000/portfolio/al/abc
+         
+ /pages/portfolio/[] will be responsible for the dynamic routes. next.js will look for the pages inside /pages if nothing is found, it will look for the dynamic routes. 
+ 
+ [] used for named parameter. if in url http://localhost:3000/portfolio/1 is used 1 will be injected in [1] our server will serve this file.
+ 
+       renderPosts(posts) {
+          return posts.map((post) => {
+            return (
+              <li key={post.id}>
+                <Link as={`/portfolio/${post.id}`} href={`/portfolio/[id]`}>
+                  <a> {post.title}</a>
+                </Link>
+              </li>
+            );
+          });
+        }
+        
+        
+ ### Setting up Universal Dynamic Routing
+ 
+         npm i next-routes
+         
+ create routes.js in the root directory.
+ 
+ - add this setting to server.js
+ 
+         const routes = require("./routes");
+         const handle = routes.getRequestHandler(app)//before routing was handled by app.getRequestHandler
+         
+ - Now we need to use routes.js on the client side. in order to do it we need to add routes to /routes.js for the routes that we need to dynamically show. Because other way we had to create a new folder and place [].js files would make our pages folder mess. We use next-routes only for pages that we need to query parameter. 
+ In order to test create a test.js in pages as add it to the Header like this:
+ 
+    import { Link as DynamicLink } from "../../routes";
+
+    <DynamicLink route="blog" params={{ id: "2" }}>
+             <a>Hello world</a>
+           </DynamicLink>
+
+
+
