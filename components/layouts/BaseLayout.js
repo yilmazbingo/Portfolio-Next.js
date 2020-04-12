@@ -2,12 +2,19 @@ import React from "react";
 import Header from "../shared/Header";
 
 const BaseLayout = (props) => {
+  const className = props.className || "";
   return (
-    <React.Fragment>
+    <div className="layout-container">
       <Header />
-      {props.children}
-    </React.Fragment>
+
+      <main className={`cover ${className}`}>
+        <div className="wrapper">{props.children}</div>
+      </main>
+    </div>
   );
 };
 
+BaseLayout.defaultProps = {
+  className: "",
+};
 export default BaseLayout;

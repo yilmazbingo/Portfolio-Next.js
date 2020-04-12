@@ -1,11 +1,13 @@
 import React from "react";
 import BaseLayout from "../components/layouts/BaseLayout";
+import BasePage from "../components/BasePage";
 
-const About = () => {
+const About = (props) => {
   return (
     <BaseLayout>
-      <Header />
-      <h1>about</h1>
+      <BasePage>
+        <h1>about</h1>
+      </BasePage>
     </BaseLayout>
   );
 };
