@@ -2,9 +2,9 @@ import React from "react";
 import BaseLayout from "../components/layouts/BaseLayout";
 import BasePage from "../components/BasePage";
 
-const Cv = () => {
+const Cv = (props) => {
   return (
-    <BaseLayout>
+    <BaseLayout {...props.auth}>
       <BasePage>
         <h1>cv</h1>
       </BasePage>

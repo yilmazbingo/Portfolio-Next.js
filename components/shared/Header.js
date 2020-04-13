@@ -10,27 +10,17 @@ import {
   Nav,
   NavItem,
   NavLink,
-  UncontrolledDropdown,
-  DropdownToggle,
+  NavbarText,
   DropdownMenu,
   DropdownItem,
-  NavbarText,
 } from "reactstrap";
-
-const BsNavlink = (props) => {
-  const { route, title } = props;
-  return (
-    <Link href={route}>
-      <a className="nav-link">{title} </a>
-    </Link>
-  );
-};
 
 const Header = (props) => {
   //destructuring, state value and
   const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen(!isOpen);
+  const { isAuthenticated } = props;
 
   return (
     <div>
@@ -64,16 +54,20 @@ const Header = (props) => {
             <NavItem className="port-navbar-item">
               <NavLink href="https://github.com/yilmazbingo">GitHub</NavLink>
             </NavItem>
-            <NavItem className="port-navbar-item">
-              <NavLink onClick={() => auth0.login()}>
-                <Login />
-              </NavLink>
-            </NavItem>
-            <NavItem className="port-navbar-item">
-              <NavLink href="">
-                <Logout />
-              </NavLink>
-            </NavItem>
+
+            {isAuthenticated ? (
+              <NavItem className="port-navbar-item">
+                <NavLink onClick={() => auth0.logout()}>
+                  <Logout />
+                </NavLink>
+              </NavItem>
+            ) : (
+              <NavItem className="port-navbar-item">
+                <NavLink onClick={() => auth0.login()}>
+                  <Login />
+                </NavLink>
+              </NavItem>
+            )}
           </Nav>
           <NavbarText>Simple Text</NavbarText>
         </Collapse>
@@ -83,3 +77,12 @@ const Header = (props) => {
 };
 
 export default Header;
+
+// const BsNavlink = (props) => {
+//   const { route, title } = props;
+//   return (
+//     <Link href={route}>
+//       <a className="nav-link">{title} </a>
+//     </Link>
+//   );
+// };

@@ -4,7 +4,7 @@ import BasePage from "../components/BasePage";
 
 const About = (props) => {
   return (
-    <BaseLayout>
+    <BaseLayout {...props.auth}>
       <BasePage>
         <h1>about</h1>
       </BasePage>
