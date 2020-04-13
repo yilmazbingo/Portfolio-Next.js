@@ -1,45 +1,7 @@
-// import React from "react";
-// import Link from "next/link";
-// import { Link as DynamicLink } from "../../routes";
-
-// class Header extends React.Component {
-//   render() {
-//     return (
-//       <React.Fragment>
-//         <Link href="/index">
-//           <a>Home</a>
-//         </Link>
-//         <Link href="/about">
-//           <a>About</a>
-//         </Link>
-//         <Link href="/blogs">
-//           <a>Blogs</a>
-//         </Link>
-//         <Link href="/cv">
-//           <a>Cv</a>
-//         </Link>
-//         <Link href="/portfolios">
-//           <a>Portfolios</a>
-//         </Link>
-//         <DynamicLink route="blog" params={{ id: "2" }}>
-//           <a>Hello world</a>
-//         </DynamicLink>
-
-//         <style jsx>
-//           {`
-//             a {
-//               font-size: 20px;
-//             }
-//           `}
-//         </style>
-//       </React.Fragment>
-//     );
-//   }
-// }
-
 import React, { useState } from "react";
 import Login from "../buttons/Login";
 import Logout from "../buttons/Logout";
+import auth0 from "../../services/auth0";
 import {
   Collapse,
   Navbar,
@@ -103,10 +65,14 @@ const Header = (props) => {
               <NavLink href="https://github.com/yilmazbingo">GitHub</NavLink>
             </NavItem>
             <NavItem className="port-navbar-item">
-              <NavLink href="">Login</NavLink>
+              <NavLink onClick={() => auth0.login()}>
+                <Login />
+              </NavLink>
             </NavItem>
             <NavItem className="port-navbar-item">
-              <NavLink href="">Logout</NavLink>
+              <NavLink href="">
+                <Logout />
+              </NavLink>
             </NavItem>
           </Nav>
           <NavbarText>Simple Text</NavbarText>
