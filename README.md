@@ -98,7 +98,7 @@ next.js suppors nested routing. if you have this directory /pages/portfolio/al/a
  - Now we need to use routes.js on the client side. in order to do it we need to add routes to /routes.js for the routes that we need to dynamically show. Because other way we had to create a new folder and place [].js files would make our pages folder mess. We use next-routes only for pages that we need to query parameter. 
  In order to test create a test.js in pages as add it to the Header like this:
  
-    import { Link as DynamicLink } from "../../routes";
+        import { Link as DynamicLink } from "../../routes";
 
        <DynamicLink route="blog" params={{ id: "2" }}>
                 <a>Hello world</a>
