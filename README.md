@@ -129,3 +129,23 @@ in auth.js
         }
       }
     }
+
+since the implementation of authentication has changed, the way how we inform has to change as well. Anything that is returned from getInitialProps of _app.js is attached to each component as prop. so we have to pass this prop to every component's <BaseLayout/> because it wraps the header and in the header component we use it. in Header.js
+
+                 const { isAuthenticated } = props;
+
+                {isAuthenticated ? (
+                  <NavItem className="port-navbar-item">
+                    <NavLink onClick={() => auth0.logout()}>
+                      <Logout />
+                    </NavLink>
+                  </NavItem>
+                ) : (
+                  <NavItem className="port-navbar-item">
+                    <NavLink onClick={() => auth0.login()}>
+                      <Login />
+                    </NavLink>
+                  </NavItem>
+                )}
+
+**NOTE** the component that did not get this prop, will not be aware of the authentication
