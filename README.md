@@ -35,7 +35,7 @@
     
   }
   
-  setSession is where we are going to store the data into the cookies:
+  setSession is where we are going to store the data into the cookies with [js-cookie] (https://www.npmjs.com/package/js-cookie)
   
               setSession(authResult) {
                 //converting everything to miliseconds
@@ -55,5 +55,77 @@
             return new Date().getTime() < expiresAt;
           }
   
+  To log out the user we clear the cookies and invoke auth.logout():
   
-  
+      logout() {
+        Cookies.remove("user");
+        Cookies.remove("jwt");
+        Cookies.remove("expiresAt");
+        console.log("logout");
+        this.auth0.logout({
+          returnTo: "",
+          clientID: "AyjiNJgMky3Q3Qf04XjHwm3YRWtr6GEX",
+        });
+      }
+
+After all this settings, we have to inform our app about the authentication. 
+
+            {auth0.isAuthenticated() ? (
+                          <NavItem className="port-navbar-item">
+                            <NavLink onClick={() => auth0.logout()}>
+                              <Logout />
+                            </NavLink>
+                          </NavItem>
+                        ) : (
+                          <NavItem className="port-navbar-item">
+                            <NavLink onClick={() => auth0.login()}>
+                              <Login />
+                            </NavLink>
+                          </NavItem>
+              )}
+
+- This  just informs only the client side of our application. Our server currently is not aware of the cookies. We need to inform our server other wise, the code that server ships to the client and client-side code that rendered to the browser are not gonna match. we setup our code inside `getInitialProps` of _app.js because it is executed on client-side and server-side.
+
+        import auth0 from "../services/auth0";
+
+        export default class MyApp extends App {
+          static async getInitialProps({ Component, router, ctx }) {
+            // console.log("ctx", ctx.req.headers);
+            let pageProps = {};
+            const isAuthenticated = process.browser
+              ? auth0.clientAuth()
+              : auth0.serverAuth(ctx.req);
+            console.log(isAuthenticated);
+
+        //this makes sure that server finishes async coding before shipping everything to client
+        if (Component.getInitialProps) {
+          pageProps = await Component.getInitialProps(ctx);
+        }
+
+        return { pageProps };
+      }
+
+      render() {
+        const { Component, pageProps } = this.props;
+        return <Component {...pageProps} />;
+      }
+     }
+
+in auth.js
+
+    clientAuth() {
+        return this.isAuthenticated();
+      }
+
+      serverAuth(req) {
+        // console.log(req.headers);
+        if (req.headers.cookie) {
+          const expiresAtCookie = req.headers.cookie
+            .split(";")
+            .find((c) => c.trim().startsWith("expiresAt="));
+          if (!expiresAtCookie) return;
+          const expiresAt = expiresAtCookie.split("=")[1];
+          return new Date().getTime() < expiresAt;
+        }
+      }
+    }
