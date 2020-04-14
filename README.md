@@ -101,4 +101,41 @@ A well-formed (JWT) consists of three concatenated Base64url-encoded strings, se
         }
       }
 
+- Authenticated users will have access to some pages that others cannot see. We should create a High Order Component to render pages for authenticated users. /components/hoc/withAuth.js
 
+
+        import React from "react";
+        import BaseLayout from "../layouts/BaseLayout";
+        import BasePage from "../BasePage";
+
+        //export default cannot be used with arrow function
+        export default function (Component) {
+          return class withAuth extends React.Component {
+            //passing pageProps={} to the component
+            static async getInitialProps(args) {
+              const pageProps =
+                (await Component.getInitialProps) &&
+                (await Component.getInitialProps(args));
+              return { pageProps };
+            }
+
+            renderProtectedPage = () => {
+              const { isAuthenticated } = this.props.auth;
+              return isAuthenticated ? (
+                <Component {...this.props} />
+              ) : (
+                <BaseLayout>
+                  <BasePage>
+                    <h1>Please login to access</h1>
+                  </BasePage>
+                </BaseLayout>
+              );
+            };
+
+            render() {
+              return this.renderProtectedPage();
+            }
+          };
+        }
+
+The components that are specific to user will be rendered inside this HOC
