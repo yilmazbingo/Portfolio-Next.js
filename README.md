@@ -139,3 +139,81 @@ A well-formed (JWT) consists of three concatenated Base64url-encoded strings, se
         }
 
 The components that are specific to user will be rendered inside this HOC
+
+- Once a user is authenticated we have to show them their private data, for example fetching their data from the browser. For fetching secret data, we have to make request, when the specific page is mounted. In next js, we do our async inside getInitialProps function. But this function is executed both on the server and the browser. the thing is we use relative url for the browser but absolute url for the server. 
+
+   /pages/secret
+   
+        import React, { useEffect, useState } from "react";
+        import BaseLayout from "../components/layouts/BaseLayout";
+        import BasePage from "../components/BasePage";
+        import withAuth from "../components/hoc/withAuth";
+        import { getSecretData } from "../actions";
+          
+          const Secret = (props) => {
+          const [data, setData] = useState("");
+
+          useEffect(() => {
+            (async () => {
+              try {
+                const secretData = await getSecretData();
+                setData(secretData);
+              } catch (ex) {
+                console.log(ex);
+              }
+            })();
+          }, []);
+
+          //we cannot call data inside the useEffect
+          // console.log("data", data);
+
+          return (
+            <BaseLayout {...props.auth}>
+              <BasePage>
+                <p>{props.pageProps.superValue}</p>
+                <h1>secret</h1>
+                <p>{data}</p>
+              </BasePage>
+            </BaseLayout>
+          );
+        };
+        Secret.getInitialProps = async (ctx) => {
+          const another = await getSecretData(ctx.req);
+
+          return { superValue: another };
+        };
+        export default withAuth(Secret);
+        
+    Inside getInitialProps we use getSecretData function which is in /actions/index.js
+
+        import axios from "axios";
+        import Cookies from "js-cookie";
+        import { getCookieFromReq } from "../helpers/utils";
+        const setAuthHeader = (req) => {
+        const token = req ? getCookieFromReq(req, "jwt") : Cookies.getJSON("jwt");
+
+          if (token) {
+            return {
+              headers: { authorization: `Bearer ${token}` },
+            };
+          }
+          return undefined;
+        };
+
+        export const getSecretData = async (req) => {
+          const url = req ? "http://localhost:3000/api/v1/secret" : "/api/v1/secret";
+          return await axios.get(url, setAuthHeader(req)).then((res) => res.data);
+        };
+
+     in setAuthHeader we attach the jwt token to the request. When we make request from the browser, we grab the cookie from `js-cookie` package. But in the server we have to get it from the req object. So we write a helper function inside /helper/utils.js
+     
+          export const getCookieFromReq = (req, cookieKey) => {
+          const cookie = req.headers.cookie
+            .split(";")
+            .find((c) => c.trim().startsWith(`${cookieKey}=`));
+
+          if (!cookie) return undefined;
+          return cookie.split("=")[1];
+        };
+     
+     
