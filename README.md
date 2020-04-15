@@ -217,3 +217,76 @@ The components that are specific to user will be rendered inside this HOC
         };
      
      
+ROLE BASED AUTHENTICATION:
+
+-once we add a role, this role will be added to our jwt and when we decode this, we can extract the role, so we can have secret pages only for authorized people. we add this condition to the HOC component.
+
+                export default (role) => (Component) =>
+                  class withAuth extends React.Component {
+                    //passing pageProps={} to the component
+                    static async getInitialProps(args) {
+                      const pageProps =
+                        (await Component.getInitialProps) &&
+                        (await Component.getInitialProps(args));
+                      return { ...pageProps };
+                    }
+
+                    renderProtectedPage = () => {
+                      const { isAuthenticated, user } = this.props.auth;
+                      const userRole = user && user[`${namespace}roles`];
+                      let isAuthorized = false;
+                      if (role) {
+                        if (userRole && userRole === role) {
+                          isAuthorized = true;
+                        }
+                      } else {
+                        isAuthorized = true;
+                      }
+
+                      if (!isAuthenticated) {
+                        return (
+                          <BaseLayout {...this.props.auth}>
+                            <BasePage>
+                              <h1>Please login to access</h1>
+                            </BasePage>
+                          </BaseLayout>
+                        );
+                      } else if (!isAuthorized) {
+                        return (
+                          <BaseLayout {...this.props.auth}>
+                            <BasePage>
+                              <h1>You are not authorized to see this page</h1>
+                            </BasePage>
+                          </BaseLayout>
+                        );
+                      } else {
+                        return <Component {...this.props} />;
+                      }
+                    };
+
+                    render() {
+                      return this.renderProtectedPage();
+                    }
+                  };
+
+- there should be endpoints that only authorized users can access. So some routes have to protected with a middleware:
+
+        exports.checkRole = (role) => (req, res, next) => {
+        //this is passed from the authService.checkJwt
+          const user = req.user;
+          if (user && user[namespace + "roles"] === role) {
+            next();
+          } else {
+            res.status(401).send({ title: "not authorized " });
+          }
+        };
+
+        server.get(
+              "/api/v1/siteowner",
+              authService.checkJwt,
+              authService.checkRole("siteOwner"),
+              (req, res) => {
+                console.log("req.user:", req.user);
+                return res.send("this is only for admin");
+              }
+            );
