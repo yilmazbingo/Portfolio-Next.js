@@ -3,6 +3,15 @@ import BaseLayout from "../components/layouts/BaseLayout";
 import Link from "next/link";
 import axios from "axios";
 import BasePage from "../components/BasePage";
+import {
+  Col,
+  Row,
+  Card,
+  CardHeader,
+  CardBody,
+  CardText,
+  CardTitle,
+} from "reactstrap";
 
 class Portfolio extends React.Component {
   static async getInitialProps(context) {
@@ -19,13 +28,29 @@ class Portfolio extends React.Component {
   }
 
   renderPosts(posts) {
-    return posts.map((post) => {
+    return posts.map((post, index) => {
       return (
-        <li key={post.id}>
-          <Link as={`/portfolio/${post.id}`} href={`/portfolio/[id]`}>
-            <a> {post.title}</a>
-          </Link>
-        </li>
+        <Col md="4" key={index}>
+          <React.Fragment>
+            <span>
+              <Card className="portfolio-card">
+                <CardHeader className="portfolio-card-header">
+                  Some Position {index}
+                </CardHeader>
+                <CardBody>
+                  <p className="portfolio-card-city"> Some Location {index} </p>
+                  <CardTitle className="portfolio-card-title">
+                    Some Company {index}
+                  </CardTitle>
+                  <CardText className="portfolio-card-text">
+                    Some Description {index}
+                  </CardText>
+                  <div className="readMore"> </div>
+                </CardBody>
+              </Card>
+            </span>
+          </React.Fragment>
+        </Col>
       );
     });
   }
@@ -34,9 +59,8 @@ class Portfolio extends React.Component {
     const { posts } = this.props;
     return (
       <BaseLayout {...this.props.auth}>
-        <BasePage>
-          <h1>portfolios</h1>
-          <ul> {this.renderPosts(posts)}</ul>
+        <BasePage title="I am portfolio" className="portfolio-page">
+          <Row> {this.renderPosts(posts)}</Row>
         </BasePage>
       </BaseLayout>
     );

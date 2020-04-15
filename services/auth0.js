@@ -1,5 +1,9 @@
 import auth0 from "auth0-js";
 import Cookies from "js-cookie";
+import jwt from "jsonwebtoken";
+import axios from "axios";
+import { getCookieFromReq } from "../helpers/utils";
+
 class Auth0 {
   constructor() {
     this.auth0 = new auth0.WebAuth({
@@ -46,124 +50,76 @@ class Auth0 {
     Cookies.remove("user");
     Cookies.remove("jwt");
     Cookies.remove("expiresAt");
-    console.log("logout");
     this.auth0.logout({
       returnTo: "",
       clientID: "AyjiNJgMky3Q3Qf04XjHwm3YRWtr6GEX",
     });
   }
 
-  isAuthenticated() {
-    const expiresAt = Cookies.getJSON("expiresAt");
-    // console.log(new Date().getTime() < expiresAt);
-    return new Date().getTime() < expiresAt;
+  //this is async so we have to call it with async everywhere
+  async verifyToken(token) {
+    if (token) {
+      //We must VERIFY THIS SIGNATURE BEFORE STORING AND USING a JWT.
+      //option will get the header where kid is stored.
+      //kid: a unique id for every key in the set.
+      const decodedToken = jwt.decode(token, { complete: true });
+      if (!decodedToken) return undefined;
+      //this is object {keys:[{  }]} this array has only one item
+      const jwks = await this.getJWKS();
+      console.log("jwks", jwks);
+      const jwk = jwks.keys[0];
+      //BUILD CERTIFICATE to verify our token
+
+      //this x5c is an array x5c:[]
+      let cert = jwk.x5c[0];
+      // g means do this for all array items
+      cert = cert.match(/.{1,64}/g).join("\n");
+      cert = `-----BEGIN CERTIFICATE-----\n${cert}\n-----END CERTIFICATE-----\n`;
+      console.log("cert", cert);
+
+      if (jwk.kid === decodedToken.header.kid) {
+        try {
+          const verifiedToken = jwt.verify(token, cert);
+          const expiresAt = verifiedToken.exp * 1000;
+          return verifiedToken && new Date().getTime() < expiresAt
+            ? verifiedToken
+            : undefined;
+        } catch (ex) {
+          return undefined;
+        }
+      }
+    }
   }
 
-  clientAuth() {
-    return this.isAuthenticated();
+  async getJWKS() {
+    try {
+      const res = await axios.get(
+        //every openId server has to have this endpoint
+        //if you visit here you will see
+        "https://dev-udiktky2.auth0.com/.well-known/jwks.json"
+      );
+      const jwks = res.data;
+      return jwks;
+    } catch (ex) {
+      return console.log(ex);
+    }
   }
 
-  serverAuth(req) {
+  async clientAuth() {
+    const token = Cookies.getJSON("jwt");
+    const verifiedToken = this.verifyToken(token);
+    return await verifiedToken;
+  }
+
+  async serverAuth(req) {
     // console.log(req.headers);
     if (req.headers.cookie) {
-      const expiresAtCookie = req.headers.cookie
-        .split(";")
-        .find((c) => c.trim().startsWith("expiresAt="));
-      if (!expiresAtCookie) return;
-      const expiresAt = expiresAtCookie.split("=")[1];
-      return new Date().getTime() < expiresAt;
+      const token = getCookieFromReq(req, "jwt");
+      const verifiedToken = await this.verifyToken(token);
+      return verifiedToken;
     }
+    return undefined;
   }
 }
 const auth0Client = new Auth0();
 export default auth0Client;
-
-// import React, { useState, useEffect, useContext } from "react";
-// import createAuth0Client from "@auth0/auth0-spa-js";
-
-// const DEFAULT_REDIRECT_CALLBACK = () =>
-//   window.history.replaceState({}, document.title, window.location.pathname);
-
-// export const Auth0Context = React.createContext();
-// export const useAuth0 = () => useContext(Auth0Context);
-// export const Auth0Provider = ({
-//   children,
-//   onRedirectCallback = DEFAULT_REDIRECT_CALLBACK,
-//   ...initOptions
-// }) => {
-//   const [isAuthenticated, setIsAuthenticated] = useState();
-//   const [user, setUser] = useState();
-//   const [auth0Client, setAuth0] = useState();
-//   const [loading, setLoading] = useState(true);
-//   const [popupOpen, setPopupOpen] = useState(false);
-
-//   useEffect(() => {
-//     const initAuth0 = async () => {
-//       const auth0FromHook = await createAuth0Client(initOptions);
-//       setAuth0(auth0FromHook);
-
-//       if (
-//         window.location.search.includes("code=") &&
-//         window.location.search.includes("state=")
-//       ) {
-//         const { appState } = await auth0FromHook.handleRedirectCallback();
-//         onRedirectCallback(appState);
-//       }
-
-//       const isAuthenticated = await auth0FromHook.isAuthenticated();
-
-//       setIsAuthenticated(isAuthenticated);
-
-//       if (isAuthenticated) {
-//         const user = await auth0FromHook.getUser();
-//         setUser(user);
-//       }
-
-//       setLoading(false);
-//     };
-//     initAuth0();
-//     // eslint-disable-next-line
-//   }, []);
-
-//   const loginWithPopup = async (params = {}) => {
-//     setPopupOpen(true);
-//     try {
-//       await auth0Client.loginWithPopup(params);
-//     } catch (error) {
-//       console.error(error);
-//     } finally {
-//       setPopupOpen(false);
-//     }
-//     const user = await auth0Client.getUser();
-//     setUser(user);
-//     setIsAuthenticated(true);
-//   };
-
-//   const handleRedirectCallback = async () => {
-//     setLoading(true);
-//     await auth0Client.handleRedirectCallback();
-//     const user = await auth0Client.getUser();
-//     setLoading(false);
-//     setIsAuthenticated(true);
-//     setUser(user);
-//   };
-//   return (
-//     <Auth0Context.Provider
-//       value={{
-//         isAuthenticated,
-//         user,
-//         loading,
-//         popupOpen,
-//         loginWithPopup,
-//         handleRedirectCallback,
-//         getIdTokenClaims: (...p) => auth0Client.getIdTokenClaims(...p),
-//         loginWithRedirect: (...p) => auth0Client.loginWithRedirect(...p),
-//         getTokenSilently: (...p) => auth0Client.getTokenSilently(...p),
-//         getTokenWithPopup: (...p) => auth0Client.getTokenWithPopup(...p),
-//         logout: (...p) => auth0Client.logout(...p),
-//       }}
-//     >
-//       {children}
-//     </Auth0Context.Provider>
-//   );
-// };

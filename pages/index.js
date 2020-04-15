@@ -7,7 +7,7 @@ import BasePage from "../components/BasePage";
 class Index extends React.Component {
   render() {
     return (
-      <BaseLayout className="cover" {...this.props.auth}>
+      <BaseLayout className="cover" headerType="index" {...this.props.auth}>
         <BasePage>
           <div className="main-section">
             <div className="background-image">

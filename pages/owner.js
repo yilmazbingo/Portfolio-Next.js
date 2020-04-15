@@ -1,13 +1,16 @@
 import React from "react";
 import BaseLayout from "../components/layouts/BaseLayout";
 import BasePage from "../components/BasePage";
+import withAuth from "../components/hoc/withAuth";
 
-const About = (props) => {
+const Owner = (props) => {
   return (
     <BaseLayout {...props.auth}>
-      <BasePage title="I am about" className="about-page"></BasePage>
+      <BasePage>
+        <h1>I am owner of this site</h1>
+      </BasePage>
     </BaseLayout>
   );
 };
 
-export default About;
+export default withAuth("siteOwner")(Owner);
