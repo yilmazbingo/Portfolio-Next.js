@@ -3,12 +3,24 @@ const server = require("express")();
 const next = require("next");
 const routes = require("../routes");
 const authService = require("./services/auth");
+const mongoose = require("mongoose");
+const config = require("./config/index");
+const bodyParser = require("body-parser");
 
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 // const handle = app.getRequestHandler(); //this is built in next route handler
 const handle = routes.getRequestHandler(app);
-// console.log("appp", app);
+
+mongoose
+  .connect(config.DB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .catch((e) => {
+    console.log("Cannot connect to the database"), process.exit(1);
+  })
+  .then(() => console.log("mongodb is up and running"));
 
 app
   .prepare()
@@ -16,6 +28,10 @@ app
     server.get("/api/v1/secret", authService.checkJwt, (req, res) => {
       res.send("I am secretdata from getinitial props");
     });
+
+    server.use(bodyParser.json());
+    server.use("/api/v1/books", require("./routes/book"));
+    server.use("/api/v1/portfolios", require("./routes/portfolio"));
 
     server.get(
       "/api/v1/siteowner",

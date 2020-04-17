@@ -1,7 +1,7 @@
 import React from "react";
 import BaseLayout from "../components/layouts/BaseLayout";
 import Link from "next/link";
-import axios from "axios";
+import { getPortfolios } from "../actions";
 import BasePage from "../components/BasePage";
 import {
   Col,
@@ -15,35 +15,42 @@ import {
 
 class Portfolio extends React.Component {
   static async getInitialProps(context) {
-    let posts = [];
-    // console.log("context", context);
+    let portfolios = [];
     try {
-      posts = await axios.get("https://jsonplaceholder.typicode.com/posts");
+      portfolios = await getPortfolios(context.req);
     } catch (e) {
       console.log(e);
     }
     return {
-      posts: posts.data.splice(0, 10), // will be passed to the page component as props
+      portfolios,
     };
   }
 
-  renderPosts(posts) {
-    return posts.map((post, index) => {
+  renderPortfolios(portfolios) {
+    return portfolios.map((portfolio, index) => {
+      const {
+        title,
+        company,
+        location,
+        position,
+        description,
+        startDate,
+      } = portfolio;
       return (
         <Col md="4" key={index}>
           <React.Fragment>
             <span>
               <Card className="portfolio-card">
                 <CardHeader className="portfolio-card-header">
-                  Some Position {index}
+                  Position :{position}
                 </CardHeader>
                 <CardBody>
-                  <p className="portfolio-card-city"> Some Location {index} </p>
+                  <p className="portfolio-card-city"> Location {location} </p>
                   <CardTitle className="portfolio-card-title">
-                    Some Company {index}
+                    Company {company}
                   </CardTitle>
                   <CardText className="portfolio-card-text">
-                    Some Description {index}
+                    Description {description}
                   </CardText>
                   <div className="readMore"> </div>
                 </CardBody>
@@ -56,11 +63,11 @@ class Portfolio extends React.Component {
   }
 
   render() {
-    const { posts } = this.props;
+    const { portfolios } = this.props;
     return (
       <BaseLayout {...this.props.auth}>
         <BasePage title="I am portfolio" className="portfolio-page">
-          <Row> {this.renderPosts(posts)}</Row>
+          <Row> {this.renderPortfolios(portfolios)}</Row>
         </BasePage>
       </BaseLayout>
     );

@@ -66,8 +66,12 @@ class Auth0 {
       if (!decodedToken) return undefined;
       //this is object {keys:[{  }]} this array has only one item
       const jwks = await this.getJWKS();
+      if (!jwks) {
+        console.log("there is a network error");
+      }
       console.log("jwks", jwks);
       const jwk = jwks.keys[0];
+
       //BUILD CERTIFICATE to verify our token
 
       //this x5c is an array x5c:[]
@@ -99,7 +103,7 @@ class Auth0 {
         "https://dev-udiktky2.auth0.com/.well-known/jwks.json"
       );
       const jwks = res.data;
-      return jwks;
+      return res ? jwks : "there is a fetching data error";
     } catch (ex) {
       return console.log(ex);
     }
