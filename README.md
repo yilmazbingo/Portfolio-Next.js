@@ -22,4 +22,6 @@ Formik Component passes "field" prop to the custom components.
   setFieldValue(nameOfTheField, valueOfTheField, validate)
   setFieldTouched(name, touched=true, true) ==> this is where Formik is informed that there is an active field, and then formik invokes handle change for this field.
   
+  
+  
  
