@@ -22,6 +22,7 @@ Formik Component passes "field" prop to the custom components.
   setFieldValue(nameOfTheField, valueOfTheField, validate)
   setFieldTouched(name, touched=true, true) ==> this is where Formik is informed that there is an active field, and then formik invokes handle change for this field.
   
+  - Main drawback of client-side validation is that it relies on JavaScript. If users turn JavaScript off, they can easily bypass the validation. This is why validation should always be implemented on both the client and server. By combining server-side and client-side methods we can get the best of the two: fast response, more secure validation and better user experience.
   
   
  
