@@ -15,7 +15,7 @@ const INITIAL_VALUES = {
   position: "",
   description: "",
   startDate: moment(),
-  endDate: memont(),
+  endDate: moment(),
 };
 
 const PortfolioCreate = (props) => {

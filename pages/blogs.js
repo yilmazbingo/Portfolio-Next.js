@@ -7,7 +7,11 @@ import { Link } from "../routes";
 
 const blogs = (props) => {
   return (
-    <BaseLayout headerType={"landing"} className="blog-listing-page">
+    <BaseLayout
+      {...props.auth}
+      headerType={"landing"}
+      className="blog-listing-page"
+    >
       <div
         className="masthead"
         style={{ backgroundImage: "url('images/home-bg.jpg')" }}
