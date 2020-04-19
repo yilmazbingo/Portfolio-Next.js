@@ -61,7 +61,7 @@ Formik Component passes "field" prop to the custom components.
           );
         };
  
- createPortfolio() is an action that is defined in /actions. before making any request, we define base axios instance:
+ createPortfolio() is an action that is defined in /actions. Before making any request, we define base axios instance:
  
          const axiosInstance = axios.create({
           baseURL: "http://localhost:3000/api/v1",
