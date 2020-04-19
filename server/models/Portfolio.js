@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const setStringType = (maxlength) => ({
   type: String,
   required: true,
+  minlength: 5,
   maxlength: maxlength,
 });
 const portfolioSchema = new Schema({

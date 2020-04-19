@@ -3,7 +3,7 @@ const routes = (module.exports = require("next-routes")());
 routes
   .add("portfolioNew", "/portfolios/new")
   .add("portfolio", "/portfolio/:id")
-  .add("portfolioEdit", "/portfolios/:id/edit")
+  .add("portfolioedit", "/portfolio/:id/edit")
   .add("userBlogs", "/blogs/dashboard")
   .add("blogEditor", "/blogs/new")
   .add("blogDetail", "/blogs/:slug")

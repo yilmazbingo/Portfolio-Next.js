@@ -10,12 +10,9 @@ router.post(
   portfolioCtrl.savePortfolio
 );
 
-router.get(
-  "/",
-  authService.checkJwt,
-  authService.checkRole("siteOwner"),
-  portfolioCtrl.getPortfolios
-);
+router.get("/", portfolioCtrl.getPortfolios);
+
+router.get("/:id", portfolioCtrl.getPortfolioById);
 
 router.patch(
   "/:id",

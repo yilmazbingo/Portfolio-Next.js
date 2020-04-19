@@ -15,6 +15,7 @@ const FormDate = (props) => {
     const { setFieldValue, setFieldTouched } = props.form;
     const { name } = props.field;
     setStartDate(date);
+    // it internally uses the setstate. so it is async
     setFieldValue(name, date, true);
     setFieldTouched(name, true, true);
   };
@@ -26,11 +27,13 @@ const FormDate = (props) => {
     setFieldValue(name, date, true);
     setFieldTouched(name, true, true);
   };
-
   const { name } = props.field;
   const nameUpperCase = name.toUpperCase();
-  const { canBeDisabled } = props;
-  console.log("props", props);
+  const {
+    canBeDisabled,
+    field,
+    form: { touched, errors },
+  } = props;
   return (
     <FormGroup>
       <Label className="label">{nameUpperCase}</Label>
@@ -48,9 +51,7 @@ const FormDate = (props) => {
         )}
       </div>
       {canBeDisabled && !isHidden && (
-        <Button onClick={() => setIsHidden(!isHidden)}>
-          Still Working Here
-        </Button>
+        <Button onClick={() => toggleDate()}>Still Working Here</Button>
       )}
 
       {canBeDisabled && isHidden && (
@@ -58,6 +59,9 @@ const FormDate = (props) => {
           <span>Still working here</span>
           <Button onClick={(date) => toggleDate(date)}> Set End Date</Button>
         </React.Fragment>
+      )}
+      {touched[field.name] && errors[field.name] && (
+        <div className="error">{errors[field.name]}</div>
       )}
     </FormGroup>
   );

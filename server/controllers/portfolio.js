@@ -6,6 +6,13 @@ exports.getPortfolios = async (req, res) => {
   res.send(portfolios);
 };
 
+exports.getPortfolioById = async (req, res) => {
+  const id = req.params.id;
+  const portfolio = await Portfolio.findById(id).select(`-__v`).exec();
+  if (!portfolio) res.status(404).send(`portfolio with ${id} does not exist`);
+  return res.send(portfolio);
+};
+
 exports.savePortfolio = async (req, res) => {
   const portfolioData = req.body;
   const userId = req.user.sub;

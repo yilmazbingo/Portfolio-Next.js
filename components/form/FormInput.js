@@ -3,12 +3,12 @@ import { Button, FormGroup, Label, Input } from "reactstrap";
 
 const PortInput = ({
   onChange,
-  name,
   type,
   field, // { name, value, onChange, onBlur }
   form: { touched, errors }, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
   ...rest
 }) => {
+  console.log("errors", errors);
   return (
     <FormGroup>
       <Label className="label">{field.name.toUpperCase()}</Label>
