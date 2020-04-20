@@ -1,8 +1,4 @@
-                const CodeElement = props => {
-                  return (
-                    <pre {...props.attributes}>
-                      <code>{props.children}</code>
-                    </pre>
-                  )
-                }
-                
+- If we have component that does not have props or stay changing you do not need to render it. You can just use the same output as before. 
+-  ‘useCallback’ returns a memoized callback and ‘useMemo’ returns a memoized value that is the result of the function parameter.
+- ‘useCallback’, however, is used differently. Take for example a parent component that often re-renders. Inside the parent, we have a child component that takes a function-prop. At each re-render, the Child will re-execute its function prop uselessly. However, if you pass ‘useCallback’ as a prop with a dependency array, it resolves the issue because the function will be executed only when the dependency changes. Every other re-render will then get a cached function.
+-functional components cannot be given refs.
