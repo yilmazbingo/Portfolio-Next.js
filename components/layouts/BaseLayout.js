@@ -9,9 +9,17 @@ const BaseLayout = (props) => {
     <React.Fragment>
       <Head>
         <title>Yilmaz Bingol</title>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:400,400i,700,700i&subset=latin-ext"
+        />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/icon?family=Material+Icons"
+        />
         <script
           src="https://kit.fontawesome.com/947d0dc7e4.js"
-          crossorigin="anonymous"
+          crossOrigin="anonymous"
         ></script>
       </Head>
       <div className="layout-container">

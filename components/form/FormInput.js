@@ -2,17 +2,19 @@ import React from "react";
 import { Button, FormGroup, Label, Input } from "reactstrap";
 
 const PortInput = ({
+  onKeyUp,
+  innerRef,
   onChange,
   type,
   field, // { name, value, onChange, onBlur }
   form: { touched, errors }, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
   ...rest
 }) => {
-  console.log("errors", errors);
+  console.log("ds", field);
   return (
     <FormGroup>
       <Label className="label">{field.name.toUpperCase()}</Label>
-      <Input type={type} {...field} {...rest} />
+      <Input autoFocus type={type} {...field} {...rest} />
       {touched[field.name] && errors[field.name] && (
         <div className="error">{errors[field.name]}</div>
       )}
