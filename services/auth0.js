@@ -2,8 +2,8 @@ import auth0 from "auth0-js";
 class Auth0 {
   constructor() {
     this.auth0 = new auth0.WebAuth({
-      domain: "dev-udiktky2.auth0.com",
-      clientID: "AyjiNJgMky3Q3Qf04XjHwm3YRWtr6GEX",
+      domain: process.env.AUTH0_DOMAIN,
+      clientID: process.env.AUTH_CLIENT_ID,
       // response_mode: "form_post",
       redirectUri: "http://localhost:3000/callback",
       responseType: "token id_token",
