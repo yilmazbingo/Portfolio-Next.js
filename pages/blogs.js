@@ -5,12 +5,13 @@ import moment from "moment";
 import { Container, Row, Col } from "reactstrap";
 import { Link } from "../routes";
 
-const blogs = (props) => {
+const Blogs = (props) => {
   return (
     <BaseLayout
       {...props.auth}
-      headerType={"landing"}
+      headerType={"default"}
       className="blog-listing-page"
+      title="Yilmaz Bingol-Update Blogs"
     >
       <div
         className="masthead"
@@ -122,7 +123,7 @@ const blogs = (props) => {
                   </li>
                 </ul>
                 <p className="copyright text-muted">
-                  Copyright &copy; Filip Jerga 2018
+                  Copyright &copy; Yilmaz Bingol 2020
                 </p>
               </div>
             </Row>
@@ -133,4 +134,4 @@ const blogs = (props) => {
   );
 };
 
-export default blogs;
+export default Blogs;

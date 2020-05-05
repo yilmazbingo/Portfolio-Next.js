@@ -122,8 +122,22 @@ export const Menu = React.forwardRef(({ className, ...props }, ref) => (
   />
 ));
 
+// export const Portal = ({ children }) => {
+//   return ReactDOM.createPortal(children, document.body);
+// };
+
+// export const Portal = ({ children }) => {
+//   // the document does not exist in SSR, so guard the Portal
+//   return typeof document === "object" && document.body
+//     ? ReactDOM.createPortal(children, document.body)
+//     : null;
+// };
+
 export const Portal = ({ children }) => {
-  return ReactDOM.createPortal(children, document.body);
+  // the document does not exist in SSR, so guard the Portal
+  return typeof window !== "undefined"
+    ? ReactDOM.createPortal(children, document.body)
+    : null;
 };
 
 export const Toolbar = React.forwardRef(({ className, ...props }, ref) => (

@@ -60,7 +60,7 @@ const Portfolio = (props) => {
     });
   };
   return (
-    <BaseLayout {...props.auth}>
+    <BaseLayout {...props.auth} title="Yilmaz Bingol portfolios-">
       <BasePage title="I am portfolio" className="portfolio-page">
         {isAuthenticated && (
           <Button

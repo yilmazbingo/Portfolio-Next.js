@@ -1,4 +1,4 @@
-export const initialValue = [
+export const defaultValue = [
   {
     type: "paragraph",
     children: [

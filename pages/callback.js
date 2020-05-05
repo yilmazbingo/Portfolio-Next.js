@@ -13,7 +13,7 @@ const Callback = (props) => {
     })();
   });
   return (
-    <BaseLayout>
+    <BaseLayout title="Yilmaz Bingol-redirecting">
       <BasePage>
         <h1>callback</h1>
       </BasePage>

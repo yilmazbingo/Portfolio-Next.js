@@ -6,6 +6,7 @@ import axios from "axios";
 
 const Test = (props) => {
   const router = useRouter();
+  console.log("props", props);
 
   return (
     <BaseLayout>
@@ -18,17 +19,21 @@ const Test = (props) => {
 Test.getInitialProps = async (context) => {
   const testId = context.query.id;
   let post = {};
-  // console.log("context", context);
   try {
     post = await axios.get(
       `https://jsonplaceholder.typicode.com/posts/${testId}`
     );
+    console.log(post.data);
+    return {
+      post: post.data,
+      yilmaz: "bir", // will be passed to the page component as props
+    };
   } catch (e) {
     console.log(e);
   }
-  return {
-    post: post.data, // will be passed to the page component as props
-  };
+  // return {
+  //   post: post.data, // will be passed to the page component as props
+  // };
 };
 
 export default Test;

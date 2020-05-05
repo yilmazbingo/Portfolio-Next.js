@@ -1,0 +1,40 @@
+//with this conversion 1rem=10px for font-size
+
+html {
+  font-size: 62.5%;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-size: 1.6rem;
+  //   background: $dark-blue;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: top;
+  background-image: url("/public/images/backgroundPortfolio.jpeg");
+  width: 100%;
+  height: 100%;
+  font-family: Arial, Helvetica;
+  letter-spacing: 0.02em;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+.absolute {
+  position: absolute;
+  margin-top: 0;
+}
+
+// .active {
+//   text: blue;
+// }

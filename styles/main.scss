@@ -1,5 +1,6 @@
-@import "./base/settings";
-@import "./base/base";
+@import "./common/settings";
+@import "./common/base";
+@import "./common/mixins";
 @import "./pages/index";
 @import "./pages/portfolios";
 @import "./components/base-layout";
@@ -7,5 +8,11 @@
 @import "./components//header";
 @import "./components/base-page";
 @import "./components/form-input";
+@import "./components/Slate-Editor/controlled-menu";
+@import "./components/buttons/dropdown";
+@import "./components/dropDownSiteOwnerBlog";
+
 @import "./pages/blogs";
 @import "./pages/editor";
+@import "./pages/userBlog";
+@import "./pages/about";

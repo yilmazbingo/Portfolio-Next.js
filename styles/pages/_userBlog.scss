@@ -1,0 +1,22 @@
+.blog-user-page {
+  padding-top: 8rem;
+  & .blog-status-title {
+    font-weight: bold;
+  }
+}
+.user-blogs-list {
+  list-style: none;
+
+  > li {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: 2.8rem;
+  }
+
+  a {
+    color: $secondary;
+  }
+}
+
+// > means children

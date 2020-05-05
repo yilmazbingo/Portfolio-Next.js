@@ -3,14 +3,16 @@ import Typed from "react-typed";
 
 const TypedAnimation = () => {
   const roles = [
-    "Fullstack-Developer",
-    "Tech Lover",
     "Blockchain",
+    "Next.js",
     "Node.js",
     "React.js",
+    "Angular",
+    "Webpack",
     "Python",
     "Firebase",
     "Mongo DB",
+    "MySQL",
   ];
   return (
     <Typed

@@ -6,11 +6,19 @@ const authService = require("./services/auth");
 const mongoose = require("mongoose");
 const config = require("./config/index");
 const bodyParser = require("body-parser");
+const path = require("path");
 
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 // const handle = app.getRequestHandler(); //this is built in next route handler
 const handle = routes.getRequestHandler(app);
+
+const robotsOptions = {
+  root: path.join(__dirname, "../public"),
+  headers: {
+    "Content-Type": "text/plain;charset=UTF-8",
+  },
+};
 
 mongoose
   .connect(config.DB_URI, {
@@ -32,6 +40,7 @@ app
     server.use(bodyParser.json());
     server.use("/api/v1/books", require("./routes/book"));
     server.use("/api/v1/portfolios", require("./routes/portfolio"));
+    server.use("/api/v1/blogs", require("./routes/blog"));
 
     server.get(
       "/api/v1/siteowner",
@@ -42,6 +51,10 @@ app
         return res.send("this is only for admin");
       }
     );
+
+    server.get("/robots.txt", (req, res) => {
+      return res.status(200).sendFile("robots.txt", robotsOptions);
+    });
 
     server.get("*", (req, res) => {
       // Be sure to pass `true` as the second argument to `url.parse`.

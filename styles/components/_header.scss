@@ -2,34 +2,38 @@
 .port-navbar.port-nav-base {
   width: 100%;
   z-index: 15;
-  padding: 40px;
+  padding: 4rem;
 
   .port-navbar {
     &-brand {
-      color: white;
-      font-size: 24px;
+      // color: white;
+      font-size: 2.4rem;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.2rem;
       font-weight: bold;
     }
 
     &-item {
-      margin-left: 10px;
-      margin-right: 10px;
+      a {
+        color: white;
+        font-weight: bold;
+      }
+      margin-left: 1rem;
+      margin-right: 1rem;
+      // &:hover,
+      // &:focus {
+      //   color: #dba919;
+      // }
     }
 
     &-link {
-      color: white;
+      // color: white;
       font-weight: bold;
       letter-spacing: 0.8px;
-      font-size: 18px;
+      font-size: 1.8rem;
       text-transform: uppercase;
 
-      &.active {
-        color: #dba919;
-      }
-
-      &:hover,
+      // &:hover,
       &:focus {
         color: #dba919;
       }
@@ -37,7 +41,34 @@
   }
 }
 
+.port-navbar-item.active.nav-item {
+  .nav-link {
+    color: $orange;
+  }
+}
 .port-navbar.port-nav-base.port-nav-default {
   padding: 30px;
   background-color: $secondary !important;
+}
+// li.active {
+//   color: blue !important;
+// }
+a.nav-link {
+  color: purple;
+}
+a:hover {
+  color: orange !important;
+}
+// a:focus {
+//   color: orange !important;
+// }
+
+//--------------------------TOGGLE MENU----
+//bg.transparent because we want this for only home page
+.bg-transparent.menu-open {
+  background-color: $secondary !important;
+}
+
+.bg-transparent.menu-close {
+  transition: 1s;
 }

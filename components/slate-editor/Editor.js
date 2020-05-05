@@ -1,12 +1,22 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState, useEffect } from "react";
 import isHotkey from "is-hotkey";
 import { Editable, withReact, useSlate, Slate } from "slate-react";
-import { Editor, Transforms, createEditor } from "slate";
+import { Editor, Transforms, createEditor, Node } from "slate";
 import { withHistory } from "slate-history";
-import { initialValue } from "./initialValue";
-
+import { defaultValue } from "./dafaultValue";
+import { deserialize } from "./deserialize";
+import HoveringToolbar from "./components/HoveringToolbar";
 import { Button, Icon, Toolbar } from "./Components";
+import ControlMenu from "./ControlMenu";
+import { toggleFormat, isFormatActive } from "./utils";
+import { updateBlogAction } from "../../actions/blogActions";
+import { serialize } from "../slate-editor/serialize";
+import { createBlog } from "../../actions/blogActions";
+import { Router } from "../../routes";
+import { getTitle } from "../slate-editor/utils";
+import { toast } from "react-toastify";
 
+//------------------SLATE DOES NOT CONNECT TO THE REDUX--------------------
 const HOTKEYS = {
   "mod+b": "bold",
   "mod+i": "italic",
@@ -16,12 +26,71 @@ const HOTKEYS = {
 
 const LIST_TYPES = ["numbered-list", "bulleted-list"];
 
-const SlateEditor = () => {
-  const [value, setValue] = useState(initialValue);
+const SlateEditor = (props) => {
+  const [value, setValue] = useState(defaultValue);
   const renderElement = useCallback((props) => <Element {...props} />, []);
   const renderLeaf = useCallback((props) => <Leaf {...props} />, []);
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
-  debugger;
+
+  const { blog } = props;
+
+  const [isSaving, setSaving] = useState(false);
+
+  const saveBlog = async () => {
+    let lockId = Math.floor(1000 + Math.random() * 9000);
+    const blog = {};
+    const text = serialize(editor);
+    blog.title = getTitle(editor).title;
+    blog.subTitle = getTitle(editor).subtitle;
+    blog.story = text;
+    setSaving(true);
+    try {
+      const createdBlog = await createBlog(blog, lockId);
+      console.log("crea", createdBlog);
+      setSaving(false);
+      Router.pushRoute(`/blogs/${createdBlog._id}/edit`);
+    } catch (err) {
+      setSaving(false);
+      const message = err || "Server Error";
+      console.error(message);
+    }
+  };
+
+  //----------UPDATE THE BLOG----------------------
+  const updateBlog = () => {
+    const newBlog = {};
+    newBlog.title = value[0].children[0] ? value[0].children[1] : null;
+    newBlog.subTitle = value[0].children[1] ? value[0].children[1] : null;
+    newBlog.story = serialize(editor);
+    setSaving(true);
+    console.log("yilmaz");
+    updateBlogAction(newBlog, blog._id)
+      .then((updatedBlog) => {
+        setSaving(false);
+        toast.success("blog is saved");
+
+        console.log("upgraded blog", updatedBlog);
+      })
+      .catch((err) => {
+        setSaving(false);
+        const message = err.message || "Server Error";
+        toast.error(message);
+        console.error(message);
+      });
+    console.log("yilmaz");
+  };
+
+  //-----------------------------SET THE INITIAL VALUE------------------------------
+  useEffect(() => {
+    const valueFromProps = props.initialValue;
+    const document = new DOMParser().parseFromString(
+      valueFromProps,
+      "text/html"
+    );
+    const deserialized = deserialize(document.body);
+    const initialValue = valueFromProps ? deserialized : defaultValue;
+    setValue(initialValue);
+  }, []);
 
   return (
     <Slate editor={editor} value={value} onChange={(value) => setValue(value)}>
@@ -36,12 +105,23 @@ const SlateEditor = () => {
         <BlockButton format="numbered-list" icon="format_list_numbered" />
         <BlockButton format="bulleted-list" icon="format_list_bulleted" />
       </Toolbar>
+      <HoveringToolbar />
       <Editable
         renderElement={renderElement}
         renderLeaf={renderLeaf}
         placeholder="Enter some rich text…"
         spellCheck
         autoFocus
+        onDOMBeforeInput={(event) => {
+          switch (event.inputType) {
+            case "formatBold":
+              return toggleFormat(editor, "bold");
+            case "formatItalic":
+              return toggleFormat(editor, "italic");
+            case "formatUnderline":
+              return toggleFormat(editor, "underline");
+          }
+        }}
         onKeyDown={(event) => {
           for (const hotkey in HOTKEYS) {
             if (isHotkey(hotkey, event)) {
@@ -50,8 +130,26 @@ const SlateEditor = () => {
               toggleMark(editor, mark);
             }
           }
+          if (
+            !isSaving &&
+            event.which === 83 &&
+            (event.ctrlKey || event.metaKey)
+          ) {
+            event.preventDefault();
+            saveBlog();
+            return;
+          }
         }}
-      />
+      ></Editable>
+      {props.blog ? (
+        <button onClick={updateBlog}>Update</button>
+      ) : (
+        <ControlMenu
+          editor={editor}
+          value={value}
+          save={saveBlog}
+        ></ControlMenu>
+      )}
     </Slate>
   );
 };

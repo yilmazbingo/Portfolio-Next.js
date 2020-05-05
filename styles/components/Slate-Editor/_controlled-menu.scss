@@ -1,0 +1,14 @@
+.control-menu {
+  text-align: right;
+  border-bottom: 0.1rem solid gray;
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+  .title {
+    float: left;
+    font-weight: bold;
+  }
+  .status-box {
+    margin-right: 1rem;
+    display: inline-block;
+  }
+}

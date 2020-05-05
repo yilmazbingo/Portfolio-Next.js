@@ -1,24 +1,17 @@
-//overflow only works with block elements. visible,scroll,hidden,auto
 .cover {
-  background-image: linear-gradient(45deg, #00aeef 0%, #096fb9 100%);
-  // overflow: hidden;
+  // background-image: linear-gradient(45deg, #00aeef 0%, #096fb9 100%);
   position: relative;
-}
-.background-image {
-  position: absolute;
+  // background-image: url("/images/backgroundPortfolio.jpeg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: top;
+  background-image: url("/images/backgroundPortfolio.jpeg");
   width: 100%;
-  height: 493px;
-
-  > img {
-    width: 100%;
-  }
+  height: 100%;
+  background-position: center;
 }
 
-// .background-image {
-//   position: absolute;
-//   width: 1762px;
-//   height: 493px;
-// }
 .wrapper {
   min-height: 100vh;
   min-width: 100vw;
@@ -36,30 +29,41 @@
   h2 {
     color: white;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 1rem;
   }
 
-  perspective: 1000px;
+  // margin-top: 10rem;
+  perspective: 100rem;
   color: white;
-  width: 400px;
+  font-weight: bold;
+  width: 40rem;
+  height: 44rem;
   position: relative;
+  // overflow: hidden;
 
   &-content {
     position: absolute;
-    bottom: 20px;
+    bottom: 2rem;
     width: 360px;
     left: 6%;
     z-index: 1;
 
     &-intro {
-      font-size: 17px;
+      font-size: 1.6rem;
+      text-overflow: ellipsis;
+      word-wrap: break-word;
+      margin-left: 0.1rem;
     }
   }
 }
-
 .image {
-  width: auto;
-  max-width: 100%;
+  object-fit: cover;
+  background-size: cover;
+  background-position: center;
+  height: 44rem;
+  width: 34rem;
+  border-radius: 50%;
+  opacity: 0.7;
 }
 
 .hero-welcome-text > h1 {
@@ -91,6 +95,7 @@
 @media (max-width: 991px) {
   .hero-section {
     width: 341px;
+    height: 445px;
 
     &-content {
       width: 341px;
@@ -102,13 +107,39 @@
   }
 }
 
+//-------THIS MAKES HORIZONTALLY SCROLLL
+// .background-image {
+//   position: absolute;
+//   width: 1762px;
+//   height: 493px;
+// }
+
+.background-image {
+  position: absolute;
+  // width: 100%;
+  // height: 493px;
+  // background-repeat: no-repeat;
+  // background-attachment: fixed;
+  // background-size: cover;
+  // background-position: top;
+  // background-image: url("/public/images/backgroundPortfolio.jpeg");
+  // width: 100%;
+  // height: 100%;
+  // background-position: center;
+
+  // > img {
+  //   width: 100%;
+  // }
+}
+
 .shadow-custom {
   width: 100%;
   height: 100%;
   position: absolute;
   top: 0;
-  box-shadow: -17px 13px 41px rgba(13, 78, 158, 0.6);
-  border: 2px solid #3bace5;
+  // box-shadow: -17px 13px 41px rgba(13, 78, 158, 0.6);
+  // border: 2px solid #3bace5;
+  border: none;
 
   .shadow-inner {
     width: 100%;
@@ -120,4 +151,50 @@
 .shadow-custom-2 {
   border: 2px solid #f37d49;
   box-shadow: -17px 13px 41px rgba(13, 78, 158, 0.3);
+}
+
+.cover-0 {
+  animation: fgradient 1s ease;
+}
+
+//when card is flipped
+.cover-1 {
+  background-image: linear-gradient(
+    45deg,
+    rgb(254, 202, 83),
+    rgb(253, 157, 97)
+  );
+}
+
+.flipper {
+  transition: 2s;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.flipper.isFlipping {
+  transform: rotateY(-180deg);
+}
+
+//position is absolute so card will stuck on each other
+.front,
+.back {
+  backface-visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 44rem;
+  width: 34rem;
+}
+
+//initial ppoint will be the beginnin. we will rotate 180 beased on flipper class
+.front {
+  transform: rotateY(0deg);
+  z-index: 9999;
+}
+
+//once fron is rotated to 180, this will display
+.back {
+  transform: rotateY(180deg);
+  left: 0;
 }

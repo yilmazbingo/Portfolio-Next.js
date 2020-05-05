@@ -7,5 +7,8 @@ routes
   .add("userBlogs", "/blogs/dashboard")
   .add("blogEditor", "/blogs/new")
   .add("blogDetail", "/blogs/:slug")
-  .add("blogEditorUpdate", "/blogs/:id/edit")
-  .add("about", "/about");
+  .add("blogeditorupdate", "/blogs/:id/edit")
+  .add("about", "/about")
+  .add("test", "/test/:id");
+
+//we can use Link for dynamic routes
