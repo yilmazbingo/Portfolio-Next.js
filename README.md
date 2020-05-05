@@ -130,7 +130,7 @@ in auth.js
       }
     }
 
-since the implementation of authentication has changed, the way how we inform has to change as well. Anything that is returned from getInitialProps of _app.js is attached to each component as prop. so we have to pass this prop to every component's <BaseLayout/> because it wraps the header and in the header component we use it. in Header.js
+since the implementation of authentication has changed, the way how we inform has to change as well. Anything that is returned from getInitialProps of _app.js is attached to each component as prop. so we have to pass this prop to every component's <BaseLayout/> because it wraps the header and in the header component we use it. in Header.js.(I will add redux in the future so I will just connect the header to the store)
 
                  const { isAuthenticated } = props;
 
