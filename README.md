@@ -3,8 +3,8 @@
     class Auth0 {
     constructor() {
       this.auth0 = new auth0.WebAuth({
-        domain: "dev-ueiktty4.auth0.com",
-        clientID: "AyjiNJgMkt3t3yf04XjHwm3YRWtr6GEX",
+        domain: process.env.AUTH0_DOMAIN,
+        clientID: process.env.AUTH_CLIENT_ID,
         redirectUri: "http://localhost:3000/callback",
         responseType: "token id_token",
       });
