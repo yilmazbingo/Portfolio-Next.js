@@ -145,14 +145,35 @@ exports.createBlog = (req, res) => {
   // }
 };
 
-exports.deleteBlog = (req, res) => {
+// exports.deleteBlog = async (req, res) => {
+//   const blogId = req.params.id;
+
+//   try {
+//     await Blog.deleteOne({ _id: blogId });
+//     return res.json({ status: "deleted" });
+//   } catch (e) {
+//     return res.status(422).send(e.message);
+//   }
+// };
+
+// -----DELETEONE TAKES CALLBACK----------------
+// exports.deleteBlog = (req, res) => {
+//   const blogId = req.params.id;
+
+//   Blog.deleteOne({ _id: blogId }, function (err, done) {
+//     if (err) {
+//       return res.status(422).send(err);
+//     }
+//   });
+//   res.json({ status: "deleted" });
+// };
+
+exports.deleteBlog = async (req, res) => {
   const blogId = req.params.id;
 
-  Blog.deleteOne({ _id: blogId }, function (err) {
-    if (err) {
-      return res.status(422).send(err);
-    }
-
-    res.json({ status: "deleted" });
-  });
+  await Blog.findByIdAndDelete(blogId).then(() =>
+    res
+      .json({ status: "deleted" })
+      .catch((e) => console.log("error in blogsssssssss", e.message))
+  );
 };

@@ -62,6 +62,7 @@ class Auth0 {
       //We must VERIFY THIS SIGNATURE BEFORE STORING AND USING a JWT.
       //option will get the header where kid is stored.
       //kid: a unique id for every key in the set.
+      //complete: return an object with the decoded payload and header.
       const decodedToken = jwt.decode(token, { complete: true });
       if (!decodedToken) return undefined;
       //this is object {keys:[{  }]} this array has only one item

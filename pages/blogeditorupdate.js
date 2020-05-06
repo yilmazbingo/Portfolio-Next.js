@@ -10,7 +10,7 @@ const BlogEditorUpdate = (props) => {
   const { blog } = props;
 
   return (
-    <BaseLayout {...props.auth} title="Yilmaz Bingol-Portfolio-">
+    <BaseLayout title="Yilmaz Bingol-Portfolio-">
       <BasePage title="write your story" className="blog-editor-page">
         <SlateEditor initialValue={blog.story} blog={blog}></SlateEditor>
       </BasePage>

@@ -5,7 +5,7 @@ import withAuth from "../components/hoc/withAuth";
 
 const Owner = (props) => {
   return (
-    <BaseLayout {...props.auth}>
+    <BaseLayout>
       <BasePage>
         <h1>I am owner of this site</h1>
       </BasePage>

@@ -14,8 +14,8 @@ const Callback = (props) => {
   });
   return (
     <BaseLayout title="Yilmaz Bingol-redirecting">
-      <BasePage>
-        <h1>callback</h1>
+      <BasePage className="callback">
+        <h1>LOADING...</h1>
       </BasePage>
     </BaseLayout>
   );

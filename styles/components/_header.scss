@@ -41,6 +41,13 @@
   }
 }
 
+//----------------------LOGIN-LOGOUT
+.nav-link {
+  .btn {
+    right: 2rem !important;
+    position: absolute;
+  }
+}
 .port-navbar-item.active.nav-item {
   .nav-link {
     color: $orange;
@@ -71,4 +78,8 @@ a:hover {
 
 .bg-transparent.menu-close {
   transition: 1s;
+}
+
+.port-navbar-item.btn {
+  margin-right: 2rem !important;
 }

@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "reactstrap";
 
 const Logout = () => {
-  return <Button color="success">Logout</Button>;
+  return <Button>Logout</Button>;
 };
 
 export default Logout;

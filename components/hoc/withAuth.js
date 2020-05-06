@@ -11,11 +11,16 @@ export default (role) => (Component) =>
       const pageProps =
         (await Component.getInitialProps) &&
         (await Component.getInitialProps(args));
+      console.log("props in withauth", pageProps);
       return { ...pageProps };
     }
 
     renderProtectedPage = () => {
-      const { isAuthenticated, user } = this.props.auth;
+      const {
+        auth: { isLoadingAuthState, isAuth, isSiteOwner, user },
+      } = this.props.initialReduxState;
+
+      // const { isAuth, user } = this.props.initialReduxStore.auth;
       const userRole = user && user[`${namespace}roles`];
       let isAuthorized = false;
       if (role) {
@@ -26,7 +31,7 @@ export default (role) => (Component) =>
         isAuthorized = true;
       }
 
-      if (!isAuthenticated) {
+      if (!isAuth) {
         return (
           <BaseLayout {...this.props.auth}>
             <BasePage>

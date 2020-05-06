@@ -4,7 +4,8 @@ import Logout from "../buttons/Logout";
 import auth0 from "../../services/auth0";
 import { useRouter } from "next/router";
 import DropDownSiteOwnerBlogMenu from "../buttons/DropDownSiteOwnerBlog";
-
+import { connect } from "react-redux";
+import { authFail } from "../../redux/actions/authActions";
 import {
   Collapse,
   Navbar,
@@ -20,11 +21,24 @@ const Header = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
 
+  console.log("props in header", props);
   const toggle = () => setIsOpen(!isOpen);
-  const { isAuthenticated, user, className, isSiteOwner } = props;
+  // const { isAuthenticated, user, className, isSiteOwner } = props;
+  const {
+    className,
+    color,
+    auth: { isLoadingAuthState, isAuth, isSiteOwner },
+  } = props;
 
   //------SETTING  NAVBAR IF TOGGLE BAR IS OPEN
   const menuOpenClass = isOpen ? "menu-open" : "menu-close";
+
+  const signOut = () => {
+    auth0Client.signOut();
+    props.dispatch(authFail());
+
+    router.replace("/");
+  };
 
   const renderBlogMenu = () => {
     if (isSiteOwner) {
@@ -93,25 +107,48 @@ const Header = (props) => {
               <NavLink href="https://github.com/yilmazbingo">GITHUB</NavLink>
             </NavItem>
 
-            {isAuthenticated ? (
-              <NavItem className="port-navbar-item">
-                <NavLink onClick={() => auth0.logout()}>
-                  <Logout />
-                </NavLink>
-              </NavItem>
-            ) : (
+            {!isLoadingAuthState && !isAuth && (
               <NavItem className="port-navbar-item">
                 <NavLink onClick={() => auth0.login()}>
                   <Login />
                 </NavLink>
               </NavItem>
             )}
+
+            {!isLoadingAuthState && isAuth && (
+              <NavItem className="port-navbar-item ">
+                <NavLink onClick={signOut}>
+                  <Logout />
+                </NavLink>
+              </NavItem>
+            )}
           </Nav>
-          <NavbarText>Simple Text</NavbarText>
         </Collapse>
       </Navbar>
     </div>
   );
 };
 
-export default Header;
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth,
+  };
+};
+
+export default connect(mapStateToProps)(Header);
+
+// export default Header;
+
+// {isAuthenticated ? (
+//   <NavItem className="port-navbar-item">
+//     <NavLink onClick={() => auth0.logout()}>
+//       <Logout />
+//     </NavLink>
+//   </NavItem>
+// ) : (
+//   <NavItem className="port-navbar-item">
+//     <NavLink onClick={() => auth0.login()}>
+//       <Login />
+//     </NavLink>
+//   </NavItem>
+// )}

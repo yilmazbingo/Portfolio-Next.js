@@ -8,7 +8,6 @@ import { Link } from "../routes";
 const Blogs = (props) => {
   return (
     <BaseLayout
-      {...props.auth}
       headerType={"default"}
       className="blog-listing-page"
       title="Yilmaz Bingol-Update Blogs"

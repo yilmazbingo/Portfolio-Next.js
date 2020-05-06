@@ -35,3 +35,10 @@ export const getUserBlogs = async (req) => {
     .get("/blogs/me", setAuthHeader(req))
     .then((response) => response.data);
 };
+
+export const deleteBlogAction = async (blogId) => {
+  return await axiosInstance
+    .delete(`/blogs/${blogId}`, setAuthHeader())
+    .then((response) => response.data)
+    .catch((err) => rejectPromise(err));
+};

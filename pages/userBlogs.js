@@ -2,10 +2,15 @@ import React from "react";
 import BaseLayout from "../components/layouts/BaseLayout";
 import BasePage from "../components/BasePage";
 import { Container, Row, Col } from "reactstrap";
-import { getUserBlogs, updateBlogAction } from "../actions/blogActions";
+import {
+  getUserBlogs,
+  updateBlogAction,
+  deleteBlogAction,
+} from "../actions/blogActions";
 import withAuth from "../components/hoc/withAuth";
 import { Link, Router } from "../routes";
 import PortButtonDropdown from "../components/buttons/Dropdown";
+import { confirmAlert } from "react-confirm-alert";
 
 const UserBlogs = (props) => {
   console.log("props in userblogs", props);
@@ -28,7 +33,62 @@ const UserBlogs = (props) => {
       .catch((e) => console.log(e.message));
   };
 
-  const deleteBlog = () => {};
+  const deleteBlogWarning = async (blogId) => {
+    const res = confirmAlert({
+      customUI: ({ onClose }) => {
+        return (
+          <div className="custom-ui">
+            <h1>Are you sure?</h1>
+            <p>You want to delete this blog?</p>
+            <button onClick={onClose}>No</button>
+            <button
+              onClick={() => {
+                deleteBlog(blogId);
+
+                onClose();
+              }}
+            >
+              Yes, Delete it!
+            </button>
+          </div>
+        );
+      },
+    });
+    if (res) {
+      deleteBlog(blogId);
+    }
+  };
+
+  const dropdownOptions = (blog) => {
+    const status = createStatus(blog.status);
+
+    return [
+      {
+        text: status.view,
+        handlers: {
+          onClick: () => changeBlogStatus(status.value, blog._id),
+        },
+      },
+      {
+        text: "Delete",
+        handlers: { onClick: () => deleteBlogWarning(blog._id) },
+      },
+    ];
+  };
+
+  const createStatus = (status) => {
+    return status === "draft"
+      ? { view: "Publish Story", value: "published" }
+      : { view: "Make a Draft", value: "draft" };
+  };
+
+  const deleteBlog = async (blogId) => {
+    await deleteBlogAction(blogId)
+      .then((status) => {
+        Router.pushRoute("/userBlogs");
+      })
+      .catch((err) => console.error("error inside userBlogs", err.message));
+  };
 
   const renderBlogs = (blogs) => (
     <ul className="user-blogs-list">
@@ -37,10 +97,7 @@ const UserBlogs = (props) => {
           <Link route={`/blogs/${blog._id}/edit`}>
             <a>{blog.title} </a>
           </Link>
-          <PortButtonDropdown
-            changeBlogStatus={changeBlogStatus(blog.status, blog._id)}
-            status={blog.status}
-          />
+          <PortButtonDropdown items={dropdownOptions(blog)} />
         </li>
       ))}
     </ul>
@@ -48,7 +105,6 @@ const UserBlogs = (props) => {
 
   return (
     <BaseLayout
-      {...props.auth}
       headerType={"default"}
       className="blog-listing-page"
       title="Yilmaz Bingol blogs"

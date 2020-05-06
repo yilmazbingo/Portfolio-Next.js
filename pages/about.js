@@ -4,7 +4,7 @@ import BasePage from "../components/BasePage";
 import { Row, Col } from "reactstrap";
 const About = (props) => {
   return (
-    <BaseLayout {...props.auth} title=" learn About Yilmaz Bingol">
+    <BaseLayout title=" learn About Yilmaz Bingol">
       <BasePage className="about-page">
         <Row className="mt-5">
           <Col md="6">

@@ -1,8 +1,11 @@
 const express = require("express");
 const router = express.Router();
+const Blog = require("../models/Blog");
 
 const blogCtrl = require("../controllers/blog");
 const authService = require("../services/auth");
+
+router.get("", blogCtrl.getBlogs);
 
 router.post(
   "/",
@@ -28,4 +31,26 @@ router.patch(
   blogCtrl.updateBlog
 );
 
+// router.delete(
+//   "/:id",
+//   authService.checkJWT,
+//   authService.checkRole("siteOwner"),
+//   blogCtrl.deleteBlog
+// );
+
+router.delete(
+  "/:id",
+  authService.checkJwt,
+  authService.checkRole("siteOwner"),
+  async (req, res) => {
+    const blogId = req.params.id;
+
+    try {
+      await Blog.findByIdAndDelete(blogId);
+      res.json({ status: "deleted" });
+    } catch (e) {
+      console.log("error in blogsssssssss", e.message);
+    }
+  }
+);
 module.exports = router;

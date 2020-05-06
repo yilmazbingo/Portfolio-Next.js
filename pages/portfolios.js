@@ -8,6 +8,7 @@ import { Col, Button, Row } from "reactstrap";
 import PortfolioCard from "../components/portfolios/PortfolioCard";
 
 const Portfolio = (props) => {
+  console.log("porps in portfolios", props);
   const {
     portfolios,
     auth: { isAuthenticated, isSiteOwner },
